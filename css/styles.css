@@ -1,0 +1,21 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Literata', Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.movie-container {
+  display: flex;
+  justify-content: center;
+}
+
+.movie-list {
+  list-style: none;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgb(10, 79, 10);
+  box-shadow: 2px 2px 2px 1px gray;
+}
+

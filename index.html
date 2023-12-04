@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/styles.css">
+    <title>Data collector</title>
+  </head>
+
+  <body>
+    <header>
+      <h1>JS fetch API demo</h1>
+    </header>
+    <main>
+      <h2>The Open Movie Database</h2>
+      <div>
+        <h3>Get by Name</h3>
+        <br>
+        <p>This is a demo of JS fetch API that gets movies by name</p>
+        <button onclick="getMovieByName()">Get a Movie by name</button>
+      </div>
+      <div>
+        <h3>Sort by Year</h3>
+        <br>
+        <p>This is a demo of JS fetch API that sorts movies by year</p>
+        <button onclick="getMoviesByYear()">Sort Movies by Year</button>
+      </div>
+      <div class="movie-container">
+        <div>
+          <ul class="movie-list"></ul>
+        </div>
+      </div>
+    </main>
+    <script src="index.js"></script>
+  </body>
+</html>
