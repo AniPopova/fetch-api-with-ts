@@ -23,6 +23,10 @@
   text-align: center;
 }
 
+.main{
+  margin-top: 70px;
+}
+
 .title {
   display: flex;
   justify-content: center;
@@ -70,6 +74,7 @@ input {
 .button {
   width: fit-content;
   height: fit-content;
+  margin: 10px;
   padding: 10px;
   background-color: #394a5d;
   color: white;

@@ -7,8 +7,19 @@ type Movie = {
   Year: string;
 };
 
+type MovieApiResponse = {
+  Search: Movie[];
+};
 
-const movieName: string = '';
+
+let currentPosterIndex = 0; // current index of the displayed poster
+
+//GLOBAL VARIABLES
+const searchSection: HTMLElement = document.getElementById('search-section') as HTMLElement;
+const resultSection: HTMLElement = document.getElementById('result-section') as HTMLElement;
+const fetchPoster: HTMLElement = document.getElementById('result-section') as HTMLElement;
+
+//FUNCTIONS
 
 function getMovieByName(): void {
   const movieNameInput: HTMLInputElement = document.getElementById("movieTitleInput") as HTMLInputElement;
@@ -47,7 +58,6 @@ function fetchMovies(url: string, sortByYear: boolean = false): void {
 function displayMovies(movies: Movie[]): void {
   const movieContainer: HTMLElement = document.querySelector('.movie-list') as HTMLElement;
 
-  // Clear previous content
   if (movieContainer !== null) {
     movieContainer.innerHTML = '';
 
@@ -55,7 +65,7 @@ function displayMovies(movies: Movie[]): void {
       for (let i = 0; i < movies.length; i++) {
         // Create a list item for each movie title
         const listItem: HTMLLIElement = document.createElement('li');
-        listItem.className = 'movie-list-item';
+        listItem.classList.add('movie-list-item');
         listItem.textContent = `${movies[i].Title} (${movies[i].Year})`;
 
         // Append the list item to the movie list
@@ -73,7 +83,6 @@ function displayMovies(movies: Movie[]): void {
 function displayMoviePoster(posterUrl: string): void {
   const image = document.getElementById("image") as HTMLImageElement;
 
-  // Update the image source with the movie poster URL
   if (image instanceof HTMLImageElement) {
     if (posterUrl !== "N/A") {
       image.src = posterUrl;
@@ -86,14 +95,12 @@ function displayMoviePoster(posterUrl: string): void {
 function fetchMoviePoster(): void {
   const movieNameInput: HTMLInputElement = document.getElementById("movieTitleInput") as HTMLInputElement;
   const movieName: string = movieNameInput.value.trim();
+  const url: string = `http://www.omdbapi.com/?apikey=e9f54ad&s=${movieName}&type=movie`;
 
   if (!movieName) {
     alert("Please enter a movie name");
     return;
   }
-
-
-  const url: string = `http://www.omdbapi.com/?apikey=e9f54ad&s=${movieName}&type=movie`;
 
   fetch(url)
     .then(function (response) {
@@ -101,12 +108,9 @@ function fetchMoviePoster(): void {
     })
     .then(function (data) {
       if (data.Search && data.Search.length > 0) {
-        // Get the first movie from the search results
         const firstMovie = data.Search[0];
 
         let image = document.getElementById("image") as HTMLImageElement;
-
-        // Update the image source with the movie poster URL
         if (image instanceof HTMLImageElement) {
           const posterUrl = firstMovie.Poster;
           if (posterUrl !== "N/A") {
@@ -124,28 +128,24 @@ function fetchMoviePoster(): void {
     });
 }
 
-let currentPosterIndex = 0; // Track the current index of the displayed poster
+
 function fetchNextMoviePoster(): void {
   const movieNameInput: HTMLInputElement = document.getElementById("movieTitleInput") as HTMLInputElement;
   const movieName: string = movieNameInput.value.trim();
+  const url: string = `http://www.omdbapi.com/?apikey=e9f54ad&s=${movieName}&type=movie`;
 
   if (!movieName) {
-    console.error("Please enter a movie name");
+    alert("Please enter a movie name");
     return;
   }
 
-  const apiUrl: string = `http://www.omdbapi.com/?apikey=e9f54ad&s=${movieName}&type=movie`;
-
-  fetch(apiUrl)
+  fetch(url)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
       if (data.Search && data.Search.length > 0) {
-        // Update the current index to the next poster
         currentPosterIndex = (currentPosterIndex + 1) % data.Search.length;
-
-        // Get the movie at the current index
         const currentMovie = data.Search[currentPosterIndex];
 
         displayMoviePoster(currentMovie.Poster);
@@ -159,26 +159,43 @@ function fetchNextMoviePoster(): void {
 }
 
 //SEARCH SECTION
-const searchSection: HTMLElement = document.getElementById('search-section') as HTMLElement;
+const movieListContainer: HTMLDivElement = document.createElement('div');
+movieListContainer.classList.add('container');
 
-//RESULT SECTION ELEMENTS
-const fetchPoster: HTMLElement = document.getElementById('result-section') as HTMLElement;
+const movieList: HTMLUListElement = document.createElement('ul');
+movieList.classList.add('movie-list');
+
+//POSTERS
+const posterContainer: HTMLDivElement = document.createElement('div');
+posterContainer.classList.add('container');
+
+const moviePoster: HTMLImageElement = document.createElement('img');
+moviePoster.id = 'image';
+moviePoster.classList.add('image');
+moviePoster.alt = 'Movie poster';
+
+movieListContainer.appendChild(movieList);
+posterContainer.appendChild(moviePoster);
+resultSection.appendChild(movieListContainer);
+resultSection.appendChild(posterContainer);
+
+// RESULT SECTION ELEMENTS
 const posterButtons: HTMLDivElement = document.createElement('div');
 posterButtons.classList.add('flex-container');
 
 const fetchMoviePosterButton: HTMLAnchorElement = document.createElement('a');
 fetchMoviePosterButton.classList.add('button');
 fetchMoviePosterButton.textContent = 'See Poster';
-posterButtons.appendChild(fetchMoviePosterButton);
 
 const switchMoviePosterButton: HTMLAnchorElement = document.createElement('a');
 switchMoviePosterButton.classList.add('button');
 switchMoviePosterButton.textContent = 'Next';
-posterButtons.appendChild(switchMoviePosterButton);
 
+posterButtons.appendChild(fetchMoviePosterButton);
+posterButtons.appendChild(switchMoviePosterButton);
 fetchPoster.appendChild(posterButtons);
 
 
-//EVENT LISTENERS
-fetchMoviePosterButton.addEventListener('click', fetchMoviePoster); 
-switchMoviePosterButton.addEventListener('click', fetchNextMoviePoster); 
+// EVENT LISTENERS
+fetchMoviePosterButton.addEventListener('click', fetchMoviePoster);
+switchMoviePosterButton.addEventListener('click', fetchNextMoviePoster);

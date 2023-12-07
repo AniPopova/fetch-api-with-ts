@@ -12,7 +12,7 @@
   <header class="header">
     <h1>TypeScript fetch API demo</h1>
   </header>
-  <main class="main container">
+  <main class="main">
     <h2 class="title">The Open Movie Database</h2>
     <section id="search-section" class="flex-container">
       <div class="container">
@@ -24,7 +24,7 @@
       </div>
     </section>
 
-      <section class="flex-container">
+    <section id="sort-section" class="flex-container">
       <div class="container">
         <h3 class="title">Sort Movies by Year</h3>
         <br>
@@ -32,14 +32,6 @@
       </div>
     </section>
     <section id="result-section" class="flex-container">
-
-        <div class="container">
-          <ul class="movie-list"></ul>
-        </div>
-        <div class="container">
-          <img id="image" class="image" alt="Movie poster" >
-        </div>
-
     </section>
   </main>
   <script src="../dist/index.js" defer></script>
