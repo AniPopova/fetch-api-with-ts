@@ -1,0 +1,19 @@
+{
+  "name": "fetch-api-with-ts",
+  "version": "1.0.0",
+  "description": "fetch demo usage",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AniPopova/fetch-api-with-ts.git"
+  },
+  "author": "AP",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AniPopova/fetch-api-with-ts/issues"
+  },
+  "homepage": "https://github.com/AniPopova/fetch-api-with-ts#readme"
+}
