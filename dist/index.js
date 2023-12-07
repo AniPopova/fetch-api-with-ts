@@ -1,15 +1,31 @@
 "use strict";
 // https://www.omdbapi.com/
 // OMDb API: http://www.omdbapi.com/?i=tt3896198&apikey=e9f54ad  API KEY
-let movieTitle = '';
+const movieName = '';
+// function getMovieByName(): void {
+//   const movieName: HTMLElement = document.getElementById("movieTitle") as HTMLElement;
+//   const url: string = `http://www.omdbapi.com/?s=${movieName}&apikey=e9f54ad`;
+//   fetchMovies(url);
+// }
+// function getMoviesByYear(): void {
+//   const url: string = "http://www.omdbapi.com/?s=Barbie&apikey=e9f54ad&type=movie";
+//   fetchMovies(url, true);
+// }
 function getMovieByName() {
-    const movieName = document.getElementById("movieTitle");
-    const url = `http://www.omdbapi.com/?s=${movieName}&apikey=e9f54ad`;
-    fetchMovies(url);
+    const movieNameInput = document.getElementById("movieTitleInput");
+    const movieName = movieNameInput.value.trim();
+    if (movieName !== '') {
+        const url = `http://www.omdbapi.com/?s=${movieName}&apikey=e9f54ad`;
+        fetchMovies(url);
+    }
 }
 function getMoviesByYear() {
-    const url = "http://www.omdbapi.com/?s=Barbie&apikey=e9f54ad&type=movie";
-    fetchMovies(url, true);
+    const movieNameInput = document.getElementById("movieTitleInput");
+    const movieName = movieNameInput.value.trim();
+    if (movieName !== '') {
+        const url = `http://www.omdbapi.com/?s=${movieName}&apikey=e9f54ad&type=movie`;
+        fetchMovies(url, true);
+    }
 }
 function fetchMovies(url, sortByYear = false) {
     fetch(url)
@@ -17,7 +33,7 @@ function fetchMovies(url, sortByYear = false) {
         .then((data) => {
         if (sortByYear && data.Search) {
             // Transform years to numbers and sort
-            data.Search.sort((a, b) => (b.Year - a.Year));
+            data.Search.sort((a, b) => (parseInt(b.Year) - parseInt(a.Year)));
         }
         displayMovies(data.Search);
     })
