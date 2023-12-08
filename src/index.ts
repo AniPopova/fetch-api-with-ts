@@ -1,53 +1,56 @@
 // https://www.omdbapi.com/
 // OMDb API: http://www.omdbapi.com/?i=tt3896198&apikey=e9f54ad  API KEY
 
-// TYPES
-type Movie = {
+// VARIABLES AND INTERFACES
+interface Movie {
   Title: string;
   Year: string;
+  Poster: string;
 };
 
-type MovieApiResponse = {
-  Search: Movie[];
+interface MovieResponse {
+  Search: Array<Movie>;
 };
 
+interface PosterResponse {
+  Response: boolean;
+  Error: string;
+};
 
-let currentPosterIndex = 0; // current index of the displayed poster
+let currentPosterIndex = 0;
 
-//GLOBAL VARIABLES
-const searchSection: HTMLElement = document.getElementById('search-section') as HTMLElement;
-const resultSection: HTMLElement = document.getElementById('result-section') as HTMLElement;
-const fetchPoster: HTMLElement = document.getElementById('result-section') as HTMLElement;
-const searchMoviesButton: HTMLAnchorElement = document.getElementById('get-movie-button') as HTMLAnchorElement; 
-const sortMoviesButton: HTMLAnchorElement = document.getElementById('sort-movies-button') as HTMLAnchorElement;
+
+//GLOBAL HTML ELEMENTS
+const searchSection = document.getElementById('search-section') as HTMLElement;
+const resultSection = document.getElementById('result-section') as HTMLElement;
+const fetchPoster = document.getElementById('result-section') as HTMLElement;
+const searchMoviesButton = document.getElementById('get-movie-button') as HTMLAnchorElement;
+const sortMoviesButton = document.getElementById('sort-movies-button') as HTMLAnchorElement;
+const movieNameInput = document.getElementById("movieTitleInput") as HTMLInputElement;
+
 //FUNCTIONS
 
-function getMovieByName(): void {
-  const movieNameInput: HTMLInputElement = document.getElementById("movieTitleInput") as HTMLInputElement;
-  const movieName: string = movieNameInput.value.trim();
+function getMoviesByNameOrYear(yearsOrName: boolean = false) {
+  const movieNameInput = document.getElementById("movieTitleInput") as HTMLInputElement;
+  const movieName = movieNameInput.value.trim();
 
   if (movieName !== '') {
-    const url: string = `http://www.omdbapi.com/?s=${movieName}&apikey=e9f54ad`;
-    fetchMovies(url);
+    let url = `http://www.omdbapi.com/?s=${movieName}&apikey=e9f54ad`;
+
+    if (yearsOrName) {
+      url += '&type=movie';
+    }
+
+    fetchMovies(url, yearsOrName);
   }
 }
 
-function getMoviesByYear(): void {
-  const movieNameInput: HTMLInputElement = document.getElementById("movieTitleInput") as HTMLInputElement;
-  const movieName: string = movieNameInput.value.trim();
 
-  if (movieName !== '') {
-    const url: string = `http://www.omdbapi.com/?s=${movieName}&apikey=e9f54ad&type=movie`;
-    fetchMovies(url, true);
-  }
-}
-
-function fetchMovies(url: string, sortByYear: boolean = false): void {
+function fetchMovies(url: string, sortByYear: boolean = false) {
   fetch(url)
     .then((response) => response.json())
-    .then((data: { Search: Movie[] }) => {
+    .then((data: MovieResponse) => {
       if (sortByYear && data.Search) {
-        // Transform years to numbers and sort
         data.Search.sort((a, b) => (parseInt(b.Year) - parseInt(a.Year)));
       }
       displayMovies(data.Search);
@@ -56,20 +59,17 @@ function fetchMovies(url: string, sortByYear: boolean = false): void {
 }
 
 
-function displayMovies(movies: Movie[]): void {
-  const movieContainer: HTMLElement = document.querySelector('.movie-list') as HTMLElement;
+function displayMovies(movies: Array<Movie>) {
+  const movieContainer = document.querySelector('.movie-list') as HTMLElement;
 
   if (movieContainer !== null) {
     movieContainer.innerHTML = '';
 
     if (movies && movies.length > 0) {
       for (let i = 0; i < movies.length; i++) {
-        //list item for each movie title
-        const listItem: HTMLLIElement = document.createElement('li');
+        const listItem = document.createElement('li');
         listItem.classList.add('movie-list-item');
         listItem.textContent = `${movies[i].Title} (${movies[i].Year})`;
-
-        // Append the list item to the movie list
         if (movieContainer) {
           movieContainer.appendChild(listItem);
         }
@@ -80,7 +80,7 @@ function displayMovies(movies: Movie[]): void {
 
 
 // MOVIE POSTER
-function displayMoviePoster(posterUrl: string): void {
+function displayMoviePoster(posterUrl: string) {
   const image = document.getElementById("image") as HTMLImageElement;
 
   if (image instanceof HTMLImageElement) {
@@ -92,10 +92,9 @@ function displayMoviePoster(posterUrl: string): void {
   }
 }
 
-function fetchMoviePoster(): void {
-  const movieNameInput: HTMLInputElement = document.getElementById("movieTitleInput") as HTMLInputElement;
-  const movieName: string = movieNameInput.value.trim();
-  const url: string = `http://www.omdbapi.com/?apikey=e9f54ad&s=${movieName}&type=movie`;
+function fetchMoviePoster(isNextPoster: boolean = false) {
+  const movieName = movieNameInput.value.trim();
+  const url = `http://www.omdbapi.com/?apikey=e9f54ad&s=${movieName}&type=movie`;
 
   if (!movieName) {
     alert("Please enter a movie name");
@@ -103,57 +102,35 @@ function fetchMoviePoster(): void {
   }
 
   fetch(url)
-    .then(function (response) {
+    .then((response) =>{
       return response.json();
     })
-    .then(function (data) {
+    .then((data: MovieResponse) =>{
       if (data.Search && data.Search.length > 0) {
-        const firstMovie = data.Search[0];
+        if (isNextPoster) {
+          currentPosterIndex = (currentPosterIndex + 1) % data.Search.length;
+        }
 
-        let image = document.getElementById("image") as HTMLImageElement;
-        if (image instanceof HTMLImageElement) {
-          const posterUrl = firstMovie.Poster;
-          if (posterUrl !== "N/A") {
-            image.src = posterUrl;
-          } else {
-            alert("No poster available for the selected movie");
+        const currentMovie = data.Search[currentPosterIndex];
+        const posterUrl = currentMovie.Poster;
+
+        if (isNextPoster) {
+          displayMoviePoster(posterUrl);
+        } else {
+          let image = document.getElementById("image") as HTMLImageElement;
+          if (image instanceof HTMLImageElement) {
+            if (posterUrl !== "N/A") {
+              image.src = posterUrl;
+            } else {
+              alert("No poster available for the selected movie");
+            }
           }
         }
       } else {
         alert(`No search results found for the movie: ${movieName}`);
       }
     })
-    .catch(function (error): void {
-      alert(`Error fetching movie picture for ${movieName}`);
-    });
-}
-
-
-function fetchNextMoviePoster(): void {
-  const movieNameInput: HTMLInputElement = document.getElementById("movieTitleInput") as HTMLInputElement;
-  const movieName: string = movieNameInput.value.trim();
-  const url: string = `http://www.omdbapi.com/?apikey=e9f54ad&s=${movieName}&type=movie`;
-
-  if (!movieName) {
-    alert("Please enter a movie name");
-    return;
-  }
-
-  fetch(url)
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (data) {
-      if (data.Search && data.Search.length > 0) {
-        currentPosterIndex = (currentPosterIndex + 1) % data.Search.length;
-        const currentMovie = data.Search[currentPosterIndex];
-
-        displayMoviePoster(currentMovie.Poster);
-      } else {
-        console.error(`No search results found for the movie: ${movieName}`);
-      }
-    })
-    .catch(function (error): void {
+    .catch(function (error: string){
       console.error(`Error fetching movie picture for ${movieName}:`, error);
     });
 }
@@ -180,11 +157,12 @@ resultSection.appendChild(movieListContainer);
 resultSection.appendChild(posterContainer);
 
 // RESULT SECTION ELEMENTS
-const posterButtons: HTMLDivElement = document.createElement('div');
+const posterButtons = document.createElement('div');
 posterButtons.classList.add('flex-container');
 
-const fetchMoviePosterButton: HTMLAnchorElement = document.createElement('a');
+const fetchMoviePosterButton = document.createElement('a');
 fetchMoviePosterButton.classList.add('button');
+//fetchMoviePosterButton.classList.add('hidden');
 fetchMoviePosterButton.textContent = 'See Poster';
 
 const switchMoviePosterButton: HTMLAnchorElement = document.createElement('a');
@@ -197,7 +175,8 @@ fetchPoster.appendChild(posterButtons);
 
 
 // EVENT LISTENERS
-searchMoviesButton.addEventListener('click', getMovieByName);
-sortMoviesButton.addEventListener('click', getMoviesByYear);
-fetchMoviePosterButton.addEventListener('click', fetchMoviePoster);
-switchMoviePosterButton.addEventListener('click', fetchNextMoviePoster);
+searchMoviesButton.addEventListener('click', () => { getMoviesByNameOrYear(false); });
+sortMoviesButton.addEventListener('click', () => { getMoviesByNameOrYear(true); });
+fetchMoviePosterButton.addEventListener('onload', () => { fetchMoviePoster(false); });
+fetchMoviePosterButton.addEventListener('click', () => { fetchMoviePoster(false); });
+switchMoviePosterButton.addEventListener('click', () => { fetchMoviePoster(true); });

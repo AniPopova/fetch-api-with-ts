@@ -10,6 +10,8 @@
   margin: 50px;
   padding: 0;
   background-color: #f5f5f5;
+  background: linear-gradient(to right, rgba(248, 243, 243, 0.6), rgba(255, 255, 255, 0.9)),
+    url("../images/background.jpg") center / cover, no-repeat;
 }
 
 .header {
@@ -54,9 +56,9 @@
   max-width: 800px;
   margin: 20px;
   padding: 20px;
-  background-color: #fff;
+  background-color: #e6e7e5;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .label {
@@ -114,7 +116,11 @@ ul.movie-list {
   margin: 20px;
 }
 
-.image {
+.poster {
   width: 260px;
   height: auto;
+}
+
+.hidden {
+  display:none;
 }
