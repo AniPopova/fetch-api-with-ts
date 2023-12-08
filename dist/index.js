@@ -6,6 +6,8 @@ let currentPosterIndex = 0; // current index of the displayed poster
 const searchSection = document.getElementById('search-section');
 const resultSection = document.getElementById('result-section');
 const fetchPoster = document.getElementById('result-section');
+const searchMoviesButton = document.getElementById('get-movie-button');
+const sortMoviesButton = document.getElementById('sort-movies-button');
 //FUNCTIONS
 function getMovieByName() {
     const movieNameInput = document.getElementById("movieTitleInput");
@@ -41,7 +43,7 @@ function displayMovies(movies) {
         movieContainer.innerHTML = '';
         if (movies && movies.length > 0) {
             for (let i = 0; i < movies.length; i++) {
-                // Create a list item for each movie title
+                //list item for each movie title
                 const listItem = document.createElement('li');
                 listItem.classList.add('movie-list-item');
                 listItem.textContent = `${movies[i].Title} (${movies[i].Year})`;
@@ -154,5 +156,7 @@ posterButtons.appendChild(fetchMoviePosterButton);
 posterButtons.appendChild(switchMoviePosterButton);
 fetchPoster.appendChild(posterButtons);
 // EVENT LISTENERS
+searchMoviesButton.addEventListener('click', getMovieByName);
+sortMoviesButton.addEventListener('click', getMoviesByYear);
 fetchMoviePosterButton.addEventListener('click', fetchMoviePoster);
 switchMoviePosterButton.addEventListener('click', fetchNextMoviePoster);

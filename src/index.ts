@@ -18,7 +18,8 @@ let currentPosterIndex = 0; // current index of the displayed poster
 const searchSection: HTMLElement = document.getElementById('search-section') as HTMLElement;
 const resultSection: HTMLElement = document.getElementById('result-section') as HTMLElement;
 const fetchPoster: HTMLElement = document.getElementById('result-section') as HTMLElement;
-
+const searchMoviesButton: HTMLAnchorElement = document.getElementById('get-movie-button') as HTMLAnchorElement; 
+const sortMoviesButton: HTMLAnchorElement = document.getElementById('sort-movies-button') as HTMLAnchorElement;
 //FUNCTIONS
 
 function getMovieByName(): void {
@@ -63,7 +64,7 @@ function displayMovies(movies: Movie[]): void {
 
     if (movies && movies.length > 0) {
       for (let i = 0; i < movies.length; i++) {
-        // Create a list item for each movie title
+        //list item for each movie title
         const listItem: HTMLLIElement = document.createElement('li');
         listItem.classList.add('movie-list-item');
         listItem.textContent = `${movies[i].Title} (${movies[i].Year})`;
@@ -79,7 +80,6 @@ function displayMovies(movies: Movie[]): void {
 
 
 // MOVIE POSTER
-
 function displayMoviePoster(posterUrl: string): void {
   const image = document.getElementById("image") as HTMLImageElement;
 
@@ -197,5 +197,7 @@ fetchPoster.appendChild(posterButtons);
 
 
 // EVENT LISTENERS
+searchMoviesButton.addEventListener('click', getMovieByName);
+sortMoviesButton.addEventListener('click', getMoviesByYear);
 fetchMoviePosterButton.addEventListener('click', fetchMoviePoster);
 switchMoviePosterButton.addEventListener('click', fetchNextMoviePoster);
