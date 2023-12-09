@@ -18,11 +18,10 @@ This is a simple TypeScript project demonstrating how to use the Fetch API to ma
 4. Start the application:
     npm start
 
-5. Open your browser and navigate to [http://localhost:3000](http://localhost:3000) to see the application in action.
+5. Use Live Sever to see the application in action.
 
 ## Features
 
 - TypeScript for static typing.
 - Fetch API for making HTTP requests.
-- Basic error handling.
-- Asynchronous programming with async/await.
+
