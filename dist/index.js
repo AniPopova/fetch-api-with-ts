@@ -14,7 +14,6 @@ const sortMoviesButton = document.getElementById('sort-movies-button');
 const movieNameInput = document.getElementById("movieTitleInput");
 //FUNCTIONS
 function getMoviesByNameOrYear(yearsOrName = false) {
-    const movieNameInput = document.getElementById("movieTitleInput");
     const movieName = movieNameInput.value.trim();
     if (movieName !== '') {
         let url = `http://www.omdbapi.com/?s=${movieName}&apikey=e9f54ad`;
@@ -125,17 +124,10 @@ const posterButtons = document.createElement('div');
 posterButtons.classList.add('flex-container');
 const fetchMoviePosterButton = document.createElement('a');
 fetchMoviePosterButton.classList.add('button');
-//fetchMoviePosterButton.classList.add('hidden');
-fetchMoviePosterButton.textContent = 'See Poster';
-const switchMoviePosterButton = document.createElement('a');
-switchMoviePosterButton.classList.add('button');
-switchMoviePosterButton.textContent = 'Next';
+fetchMoviePosterButton.textContent = 'See Next Poster';
 posterButtons.appendChild(fetchMoviePosterButton);
-posterButtons.appendChild(switchMoviePosterButton);
 fetchPoster.appendChild(posterButtons);
 // EVENT LISTENERS
-searchMoviesButton.addEventListener('click', () => { getMoviesByNameOrYear(false); });
+searchMoviesButton.addEventListener('click', () => { getMoviesByNameOrYear(false); fetchMoviePoster(true); });
 sortMoviesButton.addEventListener('click', () => { getMoviesByNameOrYear(true); });
-fetchMoviePosterButton.addEventListener('onload', () => { fetchMoviePoster(false); });
-fetchMoviePosterButton.addEventListener('click', () => { fetchMoviePoster(false); });
-switchMoviePosterButton.addEventListener('click', () => { fetchMoviePoster(true); });
+fetchMoviePosterButton.addEventListener('click', () => { fetchMoviePoster(true); });

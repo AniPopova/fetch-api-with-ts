@@ -31,7 +31,6 @@ const movieNameInput = document.getElementById("movieTitleInput") as HTMLInputEl
 //FUNCTIONS
 
 function getMoviesByNameOrYear(yearsOrName: boolean = false) {
-  const movieNameInput = document.getElementById("movieTitleInput") as HTMLInputElement;
   const movieName = movieNameInput.value.trim();
 
   if (movieName !== '') {
@@ -78,7 +77,6 @@ function displayMovies(movies: Array<Movie>) {
   }
 }
 
-
 // MOVIE POSTER
 function displayMoviePoster(posterUrl: string) {
   const image = document.getElementById("image") as HTMLImageElement;
@@ -110,10 +108,9 @@ function fetchMoviePoster(isNextPoster: boolean = false) {
         if (isNextPoster) {
           currentPosterIndex = (currentPosterIndex + 1) % data.Search.length;
         }
-
         const currentMovie = data.Search[currentPosterIndex];
         const posterUrl = currentMovie.Poster;
-
+        
         if (isNextPoster) {
           displayMoviePoster(posterUrl);
         } else {
@@ -162,21 +159,13 @@ posterButtons.classList.add('flex-container');
 
 const fetchMoviePosterButton = document.createElement('a');
 fetchMoviePosterButton.classList.add('button');
-//fetchMoviePosterButton.classList.add('hidden');
-fetchMoviePosterButton.textContent = 'See Poster';
-
-const switchMoviePosterButton: HTMLAnchorElement = document.createElement('a');
-switchMoviePosterButton.classList.add('button');
-switchMoviePosterButton.textContent = 'Next';
+fetchMoviePosterButton.textContent = 'See Next Poster';
 
 posterButtons.appendChild(fetchMoviePosterButton);
-posterButtons.appendChild(switchMoviePosterButton);
 fetchPoster.appendChild(posterButtons);
 
 
 // EVENT LISTENERS
-searchMoviesButton.addEventListener('click', () => { getMoviesByNameOrYear(false); });
-sortMoviesButton.addEventListener('click', () => { getMoviesByNameOrYear(true); });
-fetchMoviePosterButton.addEventListener('onload', () => { fetchMoviePoster(false); });
-fetchMoviePosterButton.addEventListener('click', () => { fetchMoviePoster(false); });
-switchMoviePosterButton.addEventListener('click', () => { fetchMoviePoster(true); });
+searchMoviesButton.addEventListener('click', () => { getMoviesByNameOrYear(false); fetchMoviePoster(true);});
+sortMoviesButton.addEventListener('click', () => { getMoviesByNameOrYear(true);});
+fetchMoviePosterButton.addEventListener('click', () => { fetchMoviePoster(true); });
